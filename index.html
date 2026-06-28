@@ -3,38 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>打开 PDF</title>
+    <title>PDF 在线预览</title>
     <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            text-align: center;
-            padding: 50px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 15px 30px;
-            font-size: 18px;
-            background-color: #2ea44f;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            margin: 20px;
-        }
-        .btn:hover {
-            background-color: #238b3f;
+        body { margin: 0; padding: 0; }
+        iframe {
+            width: 100%;
+            height: 100vh;
+            border: none;
         }
     </style>
 </head>
 <body>
-    <h1>GitHub Pages PDF 查看器</h1>
-    <p>点击下方按钮打开项目根目录中的 PDF 文件</p>
-    
-    <!-- 修改这里的 pdf 文件名 -->
-    <a href="soya.pdf" class="btn" target="_blank">
-        📄 打开 PDF 文件
-    </a>
-
-    <!-- 如果想直接在新标签页打开也可以用这个 -->
-    <!-- <a href="./document.pdf" target="_blank">打开 PDF</a> -->
+    <!-- 修改 pdf 文件名为你的实际文件名 -->
+    <iframe src="main/soya.pdf" title="PDF Preview"></iframe>
 </body>
 </html>
