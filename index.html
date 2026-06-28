@@ -3,22 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF 查看</title>
+    <title>SOYA</title>
     <style>
-        body {
-            font-family: system-ui, sans-serif;
+        * {
             margin: 0;
-            padding: 20px;
-            text-align: center;
+            padding: 0;
         }
-        iframe, embed, object {
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        .pdf-container {
+            width: 100%;
+            height: 100vh;
+        }
+        embed, iframe {
             width: 100%;
             height: 100%;
             border: none;
+            display: block;
         }
     </style>
 </head>
 <body>
+    <!-- 请把 your-file.pdf 改成你实际的 PDF 文件名 -->
     <div class="pdf-container">
         <embed src="soya.pdf" type="application/pdf">
     </div>
