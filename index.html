@@ -3,18 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF 在线预览</title>
+    <title>PDF 查看</title>
     <style>
-        body { margin: 0; padding: 0; }
-        iframe {
+        body {
+            font-family: system-ui, sans-serif;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+        }
+        .pdf-container {
+            max-width: 1000px;
+            margin: 20px auto;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        iframe, embed, object {
             width: 100%;
-            height: 100vh;
+            height: 85vh;
             border: none;
+        }
+        .link-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #2ea44f;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 17px;
+            margin: 15px;
         }
     </style>
 </head>
 <body>
-    <!-- 修改 pdf 文件名为你的实际文件名 -->
-    <iframe src="soya.pdf" title="PDF Preview"></iframe>
+    <h1>📄 PDF 文件查看</h1>
+    
+    <!-- 请把下面的文件名改成你实际的文件名 -->
+    <p><strong>文件：</strong> soya.pdf</p>
+    
+    <a href="soya.pdf" target="_blank" class="link-btn">
+        🔗 在新标签页打开 PDF（推荐）
+    </a>
+    
+    <div class="pdf-container">
+        <embed src="soya.pdf" type="application/pdf" width="100%" height="85vh">
+    </div>
+
+    <p style="color:#666; margin-top:30px;">
+        如果上面嵌入显示空白，请使用上方「在新标签页打开」按钮
+    </p>
 </body>
 </html>
