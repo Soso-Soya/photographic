@@ -6,41 +6,31 @@
     <title>Photo by Soya</title>
     <style>
         * { margin:0; padding:0; }
-        html, body { height:100%; overflow:hidden; background:#f4f4f4; }
+        html, body { height:100%; overflow:hidden; background:#fafafa; }
         
         .loading {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,255,255,0.95);
+            background: rgba(255,255,255,0.96);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            transition: opacity 0.4s;
         }
         .spinner {
             width: 50px; height: 50px;
-            border: 5px solid #feffff;
-            border-top: 5px solid #feffff;
+            border: 5px solid #eee;
+            border-top-color: #2ea44f;
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-bottom: 20px;
+            animation: spin 0.9s linear infinite;
+            margin-bottom: 15px;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        #pdfContainer {
-            width: 100%;
-            height: 100vh;
-            overflow: auto;
-            background: #feffff;
-            padding: 10px 0;
-        }
-        canvas {
-            display: block;
-            margin: 10px auto;
-            /* box-shadow: 0 4px 15px rgba(0,0,0,0.4); */
-            max-width: 100%;
-        }
+        
+        .pdf-container { width:100%; height:100vh; }
+        embed { width:100%; height:100%; border:none; }
     </style>
 </head>
 <body>
@@ -50,63 +40,26 @@
         <div>Loading...</div>
     </div>
 
-    <div id="pdfContainer"></div>
+    <div class="pdf-container">
+        <!-- 这里使用版本号控制缓存，修改 v= 即可强制更新 -->
+        <embed id="pdfEmbed" 
+               src="soya-compressed.pdf?v=20250629" 
+               type="application/pdf">
+    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        const loading = document.getElementById('loading');
+        const embed = document.getElementById('pdfEmbed');
 
-        const url = 'soya.pdf';   // ←←← 改成你的实际文件名
-        const container = document.getElementById('pdfContainer');
-        const loadingDiv = document.getElementById('loading');
+        embed.onload = () => {
+            loading.style.opacity = '0';
+            setTimeout(() => loading.style.display = 'none', 400);
+        };
 
-        async function loadPDF() {
-            try {
-                const loadingTask = pdfjsLib.getDocument(url);
-                const pdf = await loadingTask.promise;
-
-                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-                    const page = await pdf.getPage(pageNum);
-                    
-                    // 自动适配屏幕宽度（留一点边距）
-                    const containerWidth = container.clientWidth - 0;
-                    const viewport = page.getViewport({ scale: 1 });
-                    const scale = containerWidth / viewport.width;
-                    
-                    const scaledViewport = page.getViewport({ scale });
-
-                    const canvas = document.createElement('canvas');
-                    const context = canvas.getContext('2d');
-                    renderInteractiveForms: true,
-                    // 启用文本渲染优化
-                    textLayer: { stylesheet: textLayerStylesheet }
-                    canvas.height = scaledViewport.height;
-                    canvas.width = scaledViewport.width;
-
-                    await page.render({
-                        canvasContext: context,
-                        viewport: scaledViewport
-                    }).promise;
-
-                    container.appendChild(canvas);
-                }
-
-                // 加载完成
-                loadingDiv.style.display = 'none';
-
-            } catch (error) {
-                console.error(error);
-                loadingDiv.innerHTML = `<p style="color:red;">error</p>`;
-            }
-        }
-
-        // 启动
-        loadPDF();
-
-        // 窗口大小改变时可重新适配（可选）
-        window.addEventListener('resize', () => {
-            // 如果需要更强的响应式，可以在这里刷新页面或重新渲染
-        });
+        // 备用超时
+        setTimeout(() => {
+            if (loading.style.display !== 'none') loading.style.display = 'none';
+        }, 10000);
     </script>
 </body>
 </html>
