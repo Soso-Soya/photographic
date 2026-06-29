@@ -44,7 +44,7 @@
     <!-- 加载动画 -->
     <div id="loading" class="loading">
         <div class="spinner"></div>
-        <div class="text">LOADING... </div>
+        <div class="text">Loading... </div>
     </div>
 
     <!-- PDF -->
@@ -68,4 +68,9 @@
         setTimeout(() => {
             if (loading.style.display !== 'none') {
                 loading.style.opacity = '0';
-                setTimeout(() => loading.style.display =​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​
+                setTimeout(() => loading.style.display = 'none', 500);
+            }
+        }, 8000);
+    </script>
+</body>
+</html>
