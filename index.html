@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -60,6 +60,107 @@
         setTimeout(() => {
             if (loading.style.display !== 'none') loading.style.display = 'none';
         }, 10000);
+    </script>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF 查看 - PDF.js</title>
+    <style>
+        * { margin:0; padding:0; }
+        html, body { height:100%; overflow:hidden; background:#f4f4f4; font-family: system-ui, sans-serif; }
+        
+        .loading {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .spinner {
+            width: 50px; height: 50px;
+            border: 5px solid #e0e0e0;
+            border-top: 5px solid #2ea44f;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #pdfContainer {
+            width: 100%;
+            height: 100vh;
+            overflow: auto;
+            background: #525659;
+        }
+        canvas {
+            margin: 10px auto;
+            display: block;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <div>PDF 正在加载 (8MB)... 首次加载会稍慢</div>
+    </div>
+
+    <div id="pdfContainer"></div>
+
+    <!-- PDF.js 核心库 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <script>
+        // 指向 worker 文件（必须设置）
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        const url = 'soya-compressed.pdf';   // ←←← 修改成你的 PDF 文件名
+        const container = document.getElementById('pdfContainer');
+        const loading = document.getElementById('loading');
+
+        async function loadPDF() {
+            try {
+                const loadingTask = pdfjsLib.getDocument(url);
+                const pdf = await loadingTask.promise;
+
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const scale = 1.5;  // 可调节清晰度（越大越清晰，但加载越慢）
+                    const viewport = page.getViewport({ scale });
+
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+
+                    await page.render({
+                        canvasContext: context,
+                        viewport: viewport
+                    }).promise;
+
+                    container.appendChild(canvas);
+                }
+
+                // 加载完成
+                loading.style.display = 'none';
+
+            } catch (error) {
+                console.error('加载失败:', error);
+                loading.innerHTML = `<p style="color:red;">PDF 加载失败，请检查文件路径</p>`;
+            }
+        }
+
+        // 开始加载
+        loadPDF();
     </script>
 </body>
 </html>
