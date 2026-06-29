@@ -56,7 +56,7 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-        const url = 'soya-compressed.pdf';   // ←←← 改成你的实际文件名
+        const url = 'soya.pdf';   // ←←← 改成你的实际文件名
         const container = document.getElementById('pdfContainer');
         const loadingDiv = document.getElementById('loading');
 
@@ -70,7 +70,7 @@
                     
                     // 自动适配屏幕宽度（留一点边距）
                     const containerWidth = container.clientWidth - 20;
-                    const viewport = page.getViewport({ scale: 2 });
+                    const viewport = page.getViewport({ scale: 1 });
                     const scale = containerWidth / viewport.width;
                     
                     const scaledViewport = page.getViewport({ scale });
