@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -8,7 +6,7 @@
     <title>PDF 查看 - PDF.js</title>
     <style>
         * { margin:0; padding:0; }
-        html, body { width:100%; overflow:hidden; background:#f4f4f4; font-family: system-ui, sans-serif; }
+        html, body { height:100%; overflow:hidden; background:#f4f4f4; }
         
         .loading {
             position: fixed;
@@ -35,11 +33,13 @@
             height: 100vh;
             overflow: auto;
             background: #525659;
+            padding: 10px 0;
         }
         canvas {
-            margin: 10px auto;
             display: block;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            margin: 10px auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+            max-width: 100%;
         }
     </style>
 </head>
@@ -47,21 +47,18 @@
 
     <div id="loading" class="loading">
         <div class="spinner"></div>
-        <div>PDF 正在加载 (8MB)... 首次加载会稍慢</div>
+        <div>PDF 正在加载中...</div>
     </div>
 
     <div id="pdfContainer"></div>
 
-    <!-- PDF.js 核心库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-
     <script>
-        // 指向 worker 文件（必须设置）
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-        const url = 'soya-compressed.pdf';   // ←←← 修改成你的 PDF 文件名
+        const url = 'soya-compressed.pdf';   // ←←← 改成你的实际文件名
         const container = document.getElementById('pdfContainer');
-        const loading = document.getElementById('loading');
+        const loadingDiv = document.getElementById('loading');
 
         async function loadPDF() {
             try {
@@ -70,33 +67,43 @@
 
                 for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                     const page = await pdf.getPage(pageNum);
-                    const scale = 1.5;  // 可调节清晰度（越大越清晰，但加载越慢）
-                    const viewport = page.getViewport({ scale });
+                    
+                    // 自动适配屏幕宽度（留一点边距）
+                    const containerWidth = container.clientWidth - 20;
+                    const viewport = page.getViewport({ scale: 1 });
+                    const scale = containerWidth / viewport.width;
+                    
+                    const scaledViewport = page.getViewport({ scale });
 
                     const canvas = document.createElement('canvas');
                     const context = canvas.getContext('2d');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
+                    canvas.height = scaledViewport.height;
+                    canvas.width = scaledViewport.width;
 
                     await page.render({
                         canvasContext: context,
-                        viewport: viewport
+                        viewport: scaledViewport
                     }).promise;
 
                     container.appendChild(canvas);
                 }
 
                 // 加载完成
-                loading.style.display = 'none';
+                loadingDiv.style.display = 'none';
 
             } catch (error) {
-                console.error('加载失败:', error);
-                loading.innerHTML = `<p style="color:red;">PDF 加载失败，请检查文件路径</p>`;
+                console.error(error);
+                loadingDiv.innerHTML = `<p style="color:red;">加载失败，请检查文件名是否正确</p>`;
             }
         }
 
-        // 开始加载
+        // 启动
         loadPDF();
+
+        // 窗口大小改变时可重新适配（可选）
+        window.addEventListener('resize', () => {
+            // 如果需要更强的响应式，可以在这里刷新页面或重新渲染
+        });
     </script>
 </body>
 </html>
