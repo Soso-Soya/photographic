@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF 查看 - 支持超链接</title>
+    <title>Photo by Soya</title>
     <style>
         * { margin:0; padding:0; }
         html, body { height:100%; overflow:hidden; background:#f4f4f4; }
@@ -20,8 +20,8 @@
         }
         .spinner {
             width: 50px; height: 50px;
-            border: 5px solid #e0e0e0;
-            border-top: 5px solid #2ea44f;
+            border: 5px solid #feffff;
+            border-top: 5px solid #feffff;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             margin-bottom: 20px;
@@ -32,37 +32,14 @@
             width: 100%;
             height: 100vh;
             overflow: auto;
-            background: #525659;
-            padding: 15px 0;
-            position: relative;
+            background: #feffff;
+            padding: 10px 0;
         }
-        
-        .page-container {
-            position: relative;
+        canvas {
+            display: block;
             margin: 10px auto;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            background: white;
-        }
-        
-        canvas { display: block; }
-        
-        .textLayer, .annotationLayer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            overflow: hidden;
-            opacity: 0.999;
-            line-height: 1;
-        }
-        .annotationLayer a {
-            position: absolute;
-            text-decoration: none;
-            border-bottom: 1px dotted transparent;
-        }
-        .annotationLayer a:hover {
-            border-bottom: 1px dotted blue;
+            /* box-shadow: 0 4px 15px rgba(0,0,0,0.4); */
+            max-width: 100%;
         }
     </style>
 </head>
@@ -70,7 +47,7 @@
 
     <div id="loading" class="loading">
         <div class="spinner"></div>
-        <div>PDF 加载中...</div>
+        <div>Loading...</div>
     </div>
 
     <div id="pdfContainer"></div>
@@ -79,7 +56,7 @@
     <script>
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-        const url = 'soya.pdf';   // ← 修改成你的 PDF 文件名
+        const url = 'soya.pdf';   // ←←← 改成你的实际文件名
         const container = document.getElementById('pdfContainer');
         const loadingDiv = document.getElementById('loading');
 
@@ -91,72 +68,42 @@
                 for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
                     const page = await pdf.getPage(pageNum);
                     
-                    // 自动适配宽度
-                    const containerWidth = Math.min(container.clientWidth - 30, 1200);
-                    let scale = containerWidth / page.getViewport({scale: 1}).width;
-                    scale = Math.min(scale, 2.0);   // 限制最大放大倍数
+                    // 自动适配屏幕宽度（留一点边距）
+                    const containerWidth = container.clientWidth - 0;
+                    const viewport = page.getViewport({ scale: 1 });
+                    const scale = containerWidth / viewport.width;
+                    
+                    const scaledViewport = page.getViewport({ scale });
 
-                    const viewport = page.getViewport({ scale });
-
-                    // 创建页面容器
-                    const pageDiv = document.createElement('div');
-                    pageDiv.className = 'page-container';
-                    pageDiv.style.width = `${viewport.width}px`;
-                    pageDiv.style.height = `${viewport.height}px`;
-
-                    // Canvas（渲染页面内容）
                     const canvas = document.createElement('canvas');
-                    canvas.height = viewport.height;
-                    canvas.width = viewport.width;
                     const context = canvas.getContext('2d');
+                    canvas.height = scaledViewport.height;
+                    canvas.width = scaledViewport.width;
 
                     await page.render({
                         canvasContext: context,
-                        viewport: viewport
+                        viewport: scaledViewport
                     }).promise;
 
-                    pageDiv.appendChild(canvas);
-
-                    // 添加文字层（支持复制文字）
-                    const textLayerDiv = document.createElement('div');
-                    textLayerDiv.className = 'textLayer';
-                    pageDiv.appendChild(textLayerDiv);
-
-                    // 添加注释层（支持超链接）
-                    const annotationLayerDiv = document.createElement('div');
-                    annotationLayerDiv.className = 'annotationLayer';
-                    pageDiv.appendChild(annotationLayerDiv);
-
-                    container.appendChild(pageDiv);
-
-                    // 渲染文字层
-                    await pdfjsLib.renderTextLayer({
-                        textContentSource: await page.getTextContent(),
-                        container: textLayerDiv,
-                        viewport: viewport,
-                        textDivs: []
-                    }).promise;
-
-                    // 渲染注释层（关键：显示超链接）
-                    await pdfjsLib.AnnotationLayer.render({
-                        viewport: viewport.clone({ dontFlip: true }),
-                        div: annotationLayerDiv,
-                        annotations: await page.getAnnotations(),
-                        page: page,
-                        linkService: new pdfjsLib.PDFLinkService(),
-                        renderInteractiveForms: true
-                    });
+                    container.appendChild(canvas);
                 }
 
+                // 加载完成
                 loadingDiv.style.display = 'none';
 
             } catch (error) {
                 console.error(error);
-                loadingDiv.innerHTML = `<p style="color:red;">加载失败，请检查文件名</p>`;
+                loadingDiv.innerHTML = `<p style="color:red;">error</p>`;
             }
         }
 
+        // 启动
         loadPDF();
+
+        // 窗口大小改变时可重新适配（可选）
+        window.addEventListener('resize', () => {
+            // 如果需要更强的响应式，可以在这里刷新页面或重新渲染
+        });
     </script>
 </body>
 </html>
