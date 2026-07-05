@@ -51,9 +51,6 @@
     <div id="loading" class="loading">
         <div class="spinner"></div>
         <div>Loading...</div>
-        <div class="download-btn">
-            <a id="downloadLink" href="soya.pdf"  download>Download</a>
-        </div>
     </div>
 
     <div class="pdf-container">
@@ -61,7 +58,8 @@
                src="soya.pdf" 
                type="application/pdf">
     </div>
-
+    <a id="downloadLink" class="download-btn" href="soya.pdf"  download>Download</a>
+    
     <script>
         const loading = document.getElementById('loading');
         const embed = document.getElementById('pdfEmbed');
