@@ -33,8 +33,6 @@
             border-radius: 10%;
             margin-bottom: 15px;
             background: #2ea44f;
-        }
-        a{
             text-decoration: none
             color:#fefefe;
             font-size:20px;
@@ -47,7 +45,7 @@
     </style>
 </head>
 <body>
-
+ <button type="button" id="downloadLink" class="download-btn" href="soya.pdf"  download>Download</button>
     <div id="loading" class="loading">
         <div class="spinner"></div>
         <div>Loading...</div>
@@ -58,7 +56,7 @@
                src="soya.pdf" 
                type="application/pdf">
     </div>
-    <a id="downloadLink" class="download-btn" href="soya.pdf"  download>Download</a>
+   
     
     <script>
         const loading = document.getElementById('loading');
@@ -69,7 +67,6 @@
             setTimeout(() => loading.style.display = 'none', 400);
         };
 
-        //备用超时
         setTimeout(() => {
             if (loading.style.display !== 'none') loading.style.display = 'none';
         }, 10000);
