@@ -28,19 +28,20 @@
             animation: spin 0.9s linear infinite;
             margin-bottom: 15px;
         }
-        .download-btn{
-            width: 100px; 
-            margin:5px;
-            border: 5px solid;
+        .download-btn {
+            width: 100px;
+            padding: 12px 0;           /* 增加内边距，更好看 */
+            margin: 10px auto;         /* 上下10px，左右自动居中 */
+            border: 5px solid #fefefe; /* 必须加颜色！ */
             background-color: #171717;
-            text-decoration: none;
             color: #fefefe;
-            font-size:17px;
+            font-size: 17px;
+            text-decoration: none;
+            border-radius: 3px;        /* 稍微调大一点更现代 */
             display: flex;
-            text-align:center;
-            border-radius: 2px;
-            
-            
+            align-items: center;       /* 垂直居中 */
+            justify-content: center;   /* 水平居中 */
+            transition: all 0.3s ease; /* 可选：悬停动画 */
         }
         .download-btn:hover {
              background-color: #373737;
