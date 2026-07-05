@@ -1,4 +1,4 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -58,109 +58,12 @@
 
         // 备用超时
         setTimeout(() => {
-            if (loading.style.display !== 'none') loading.style.display = 'none';
+            if (loading.style.display !== 'none') {
+                loading.style.display = 'none';
+                 showError();
+            }
         }, 10000);
-    </script>
-</body>
-</html> -->
-
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PDF 查看</title>
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        html, body { height:100%; overflow:hidden; font-family: system-ui, sans-serif; background:#f8f9fa; }
         
-        .loading {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(255,255,255,0.97);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            transition: opacity 0.5s;
-        }
-        .spinner {
-            width: 50px; height: 50px;
-            border: 5px solid #e5e5e5;
-            border-top: 5px solid #2ea44f;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-bottom: 20px;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .error {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: #fff;
-            display: none;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1100;
-        }
-        .download-btn {
-            margin-top: 20px;
-            padding: 14px 32px;
-            font-size: 17px;
-            background: #2ea44f;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .download-btn:hover {
-            background: #238b3f;
-        }
-
-        .pdf-container { width:100%; height:100vh; }
-        embed { width:100%; height:100%; border: none; }
-    </style>
-</head>
-<body>
-
-    <!-- 加载中 -->
-    <div id="loading" class="loading">
-        <div class="spinner"></div>
-        <div>PDF 加载中 (8MB)...</div>
-    </div>
-
-    <!-- 加载失败界面 -->
-    <div id="error" class="error">
-        <h2>❌ PDF 加载失败</h2>
-        <p style="margin:15px 0 10px; color:#666;">文件可能加载超时或出现错误</p>
-        <a id="downloadLink" href="soya.pdf" class="download-btn" download>
-            📥 下载 PDF 文件
-        </a>
-    </div>
-
-    <!-- PDF 显示区域 -->
-    <div class="pdf-container">
-        <embed id="pdfEmbed" src="soya.pdf?v=20250705" type="application/pdf">
-    </div>
-
-    <script>
-        const loading = document.getElementById('loading');
-        const errorDiv = document.getElementById('error');
-        const embed = document.getElementById('pdfEmbed');
-        const downloadLink = document.getElementById('downloadLink');
-
-        let loadFailed = false;
-
-        // 加载成功
-        embed.onload = () => {
-            loading.style.opacity = '0';
-            setTimeout(() => loading.style.display = 'none', 500);
-        };
-
         // 加载失败处理
         function showError() {
             if (loadFailed) return;
@@ -172,16 +75,10 @@
 
         // 检测加载失败（常用方法）
         embed.onerror = showError;
-
-        // 超时处理（15秒还没加载完就显示下载按钮）
-        setTimeout(() => {
-            if (loading.style.display !== 'none') {
-                showError();
-            }
-        }, 15000);
-
-        // 设置下载文件名（可选）
-        // downloadLink.download = "你的文件名称.pdf";
+        
+        downloadLink.download = "soya.pdf";
+        
     </script>
 </body>
 </html>
+
