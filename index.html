@@ -41,9 +41,8 @@
     </div>
 
     <div class="pdf-container">
-        <!-- 这里使用版本号控制缓存，修改 v= 即可强制更新 -->
         <embed id="pdfEmbed" 
-               src="soya-compressed.pdf?v=20250629" 
+               src="soya-compressed.pdf" 
                type="application/pdf">
     </div>
 
@@ -58,25 +57,8 @@
 
         // 备用超时
         setTimeout(() => {
-            if (loading.style.display !== 'none') {
-                loading.style.display = 'none';
-                 // showError();
-            }
+            if (loading.style.display !== 'none') loading.style.display = 'none';
         }, 10000);
-        
-        // // 加载失败处理
-        // function showError() {
-        //     if (loadFailed) return;
-        //     loadFailed = true;
-            
-        //     loading.style.display = 'none';
-        //     errorDiv.style.display = 'flex';
-        // }
-
-        // // 检测加载失败（常用方法）
-        // embed.onerror = showError;
-        
-        // downloadLink.download = "soya.pdf";
         
     </script>
 </body>
