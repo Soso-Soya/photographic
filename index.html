@@ -56,13 +56,13 @@
             setTimeout(() => loading.style.display = 'none', 400);
         };
 
-        // // 备用超时
-        // setTimeout(() => {
-        //     if (loading.style.display !== 'none') {
-        //         loading.style.display = 'none';
-        //          showError();
-        //     }
-        // }, 10000);
+        // 备用超时
+        setTimeout(() => {
+            if (loading.style.display !== 'none') {
+                loading.style.display = 'none';
+                 // showError();
+            }
+        }, 10000);
         
         // // 加载失败处理
         // function showError() {
