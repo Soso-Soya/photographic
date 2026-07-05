@@ -27,13 +27,15 @@
             animation: spin 0.9s linear infinite;
             margin-bottom: 15px;
         }
-        #download-btn{
+        .download-btn{
             width: 80px; height: 35px;
-            border: 0 solid #eee;
+            border: 0 solid;
             border-radius: 10%;
             animation: spin 0.9s linear infinite;
             margin-bottom: 15px;
             background: rgba(255,255,255,0.96);
+            font-size:17px;
+            text-align:center;
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         
@@ -46,7 +48,9 @@
     <div id="loading" class="loading">
         <div class="spinner"></div>
         <div>Loading...</div>
-        <div id="downloadLink" href="soya.pdf" class="download-btn" download>Download</div>
+        <div class="download-btn">
+            <a id="downloadLink" href="soya.pdf"  download>Download</a>
+        </div>
     </div>
 
     <div class="pdf-container">
